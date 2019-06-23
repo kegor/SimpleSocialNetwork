@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SimpleSocialNetwork.Data;
@@ -60,6 +63,19 @@ namespace SimpleSocialNetwork.Controllers
             identityUser.BirthDate = user.BirthDate;
             identityUser.Hobbies = user.Hobbies;
 
+            byte[] imageData = null;
+            if (Request.Form.Files.Count > 0)
+            {
+                IFormFile avatarFile = Request.Form.Files["Avatar"];
+
+                using (var reader = new BinaryReader(avatarFile.OpenReadStream()))
+                {
+                    imageData = reader.ReadBytes((int)avatarFile.Length);
+                }
+            }
+
+            identityUser.Avatar = imageData;
+
             var result = await _userManager.UpdateAsync(identityUser);
 
             if (!result.Succeeded)
@@ -77,6 +93,23 @@ namespace SimpleSocialNetwork.Controllers
             var user = _dbContext.Users.First(u => u.Id == id);
             ViewBag.is_auth_user = IsAuthorizedUser(user.Id);
             return View(user);
+        }
+
+        // TODO: move to another controller
+        public FileResult Photo()
+        {
+            // TODO: validation and other checks
+            var user = _dbContext.Users.First(u => u.Email == HttpContext.User.Identity.Name);
+
+
+            if (user.Avatar != null)
+            {
+                return new FileContentResult(user.Avatar, "image/jpeg");
+            }
+            else
+            {
+                return new VirtualFileResult("/images/noavatar.png", "image/jpeg");
+            }
         }
 
         // TODO: reconsider this method
