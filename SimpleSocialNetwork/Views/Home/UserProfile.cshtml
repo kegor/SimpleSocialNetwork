@@ -1,0 +1,29 @@
+﻿@model SimpleSocialNetwork.Models.ApplicationUser
+@{
+    ViewData["Title"] = "User profile";
+}
+
+<h1>Profile</h1>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.FirstName)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.FirstName)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.LastName)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.LastName)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.PatronymicName)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.PatronymicName)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.BirthDate)</dt>
+        <dd class="col-sm-10">@Model.BirthDate?.ToString("d")</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Hobbies)</dt>
+        <dd class="col-sm-10" style="white-space: pre-line">@Html.DisplayFor(model => model.Hobbies)</dd>
+    </dl>
+</div>
+@if (ViewBag.is_auth_user)
+{
+    <div>
+        <a class="btn btn-primary" asp-controller="Home" asp-action="EditProfile" asp-route-id="@Model.Id">Edit profile</a>
+    </div>
+}
