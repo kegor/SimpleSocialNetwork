@@ -31,3 +31,4 @@ D:\git\SimpleSocialNetwork\SimpleSocialNetwork\obj\Debug\netcoreapp2.2\SimpleSoc
 D:\git\SimpleSocialNetwork\SimpleSocialNetwork\obj\Debug\netcoreapp2.2\Razor\Views\Home\UserProfile.g.cshtml.cs
 D:\git\SimpleSocialNetwork\SimpleSocialNetwork\obj\Debug\netcoreapp2.2\Razor\Views\Home\EditProfile.g.cshtml.cs
 D:\git\SimpleSocialNetwork\SimpleSocialNetwork\obj\Debug\netcoreapp2.2\SimpleSocialNetwork.csprojAssemblyReference.cache
+D:\git\SimpleSocialNetwork\SimpleSocialNetwork\obj\Debug\netcoreapp2.2\Razor\Views\Users\Index.g.cshtml.cs

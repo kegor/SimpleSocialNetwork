@@ -96,10 +96,19 @@ namespace SimpleSocialNetwork.Controllers
         }
 
         // TODO: move to another controller
-        public FileResult Photo()
+        public FileResult Photo(string id)
         {
-            // TODO: validation and other checks
-            var user = _dbContext.Users.First(u => u.Email == HttpContext.User.Identity.Name);
+            ApplicationUser user = null;
+
+            if (string.IsNullOrEmpty(id))
+            {
+                // TODO: validation and other checks
+                user = _dbContext.Users.First(u => u.Email == HttpContext.User.Identity.Name);
+            }
+            else
+            {
+                user = _dbContext.Users.First(u => u.Id == id);
+            }
 
 
             if (user.Avatar != null)

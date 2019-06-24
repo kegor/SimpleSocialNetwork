@@ -1,0 +1,80 @@
+﻿@model PaginatedList<SimpleSocialNetwork.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h2>Users</h2>
+
+<div class="mb-3">
+    <form class="form-inline" asp-action="Index" method="get">
+        <div class="form-group">
+            <label for="findByName" class="mb-2 mr-sm-2 mb-sm-0">Find by name:</label>
+            <input type="text" name="SearchString" class="form-control mb-2 mr-sm-2 mb-sm-0" id="findByName" value="@ViewData["CurrentFilter"]">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2 mr-sm-2 mb-sm-0">Search</button> |
+        <a class="mb-2 ml-sm-2 mb-sm-0" asp-action="Index">Back to Full List</a>
+    </form>
+</div>
+
+<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Avatar
+                </th>
+                <th>
+                    First Name
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Last Name</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Birth Date</a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="@Url.Action("Photo", "Home", new { Id = item.Id })" height="24" width="24" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @item.BirthDate?.ToString("d")
+                    </td>
+                    <td>
+                        <a asp-controller="Home" asp-action="UserProfile" asp-route-id="@item.Id">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
