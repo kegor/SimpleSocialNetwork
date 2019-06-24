@@ -21,11 +21,36 @@
         <dd class="col-sm-10">@Model.BirthDate?.ToString("d")</dd>
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Hobbies)</dt>
         <dd class="col-sm-10" style="white-space: pre-line">@Html.DisplayFor(model => model.Hobbies)</dd>
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Friends)</dt>
+        <dd class="col-sm-10">
+            @if (Model.Friends != null && Model.Friends.Any())
+            {
+                foreach (var friend in Model.Friends)
+                 {
+                     <a asp-controller="Home" asp-action="UserProfile" asp-route-id="@friend.Id">@friend.FirstName @friend.LastName</a><br/>
+                 }
+            }
+            else
+            {
+                <p>There are no friends yet.</p>
+            }
+        </dd>
     </dl>
 </div>
-@if (ViewBag.is_auth_user)
+@if (ViewBag.isAuthorizedUser)
 {
     <div>
         <a class="btn btn-primary" asp-controller="Home" asp-action="EditProfile" asp-route-id="@Model.Id">Edit profile</a>
     </div>
+}
+else
+{
+    if (ViewBag.isFriend)
+     {
+         <label>Your friend</label>
+     }
+     else
+     {
+         <a class="btn btn-primary" asp-controller="Users" asp-action="AddFriend" asp-route-id="@Model.Id">Add friend</a>
+     }
 }

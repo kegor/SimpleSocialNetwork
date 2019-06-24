@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SimpleSocialNetwork.Data;
 using SimpleSocialNetwork.Models;
 
@@ -74,7 +74,10 @@ namespace SimpleSocialNetwork.Controllers
                 }
             }
 
-            identityUser.Avatar = imageData;
+            if (imageData != null)
+            {
+                identityUser.Avatar = imageData;
+            }
 
             var result = await _userManager.UpdateAsync(identityUser);
 
@@ -91,14 +94,16 @@ namespace SimpleSocialNetwork.Controllers
         public IActionResult UserProfile(string id)
         {
             var user = _dbContext.Users.First(u => u.Id == id);
-            ViewBag.is_auth_user = IsAuthorizedUser(user.Id);
+            ViewBag.isAuthorizedUser = IsAuthorizedUser(user.Id);
+            ViewBag.isFriend = IsFriend(user.Id);
             return View(user);
         }
 
         // TODO: move to another controller
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public FileResult Photo(string id)
         {
-            ApplicationUser user = null;
+            ApplicationUser user;
 
             if (string.IsNullOrEmpty(id))
             {
@@ -133,6 +138,15 @@ namespace SimpleSocialNetwork.Controllers
             {
                 return false;
             }
+        }
+
+        // TODO: reconsider this method
+        protected bool IsFriend(string id)
+        {
+            var user = _dbContext.Users.Include("Friends").First(u => u.UserName == HttpContext.User.Identity.Name);
+            var otherUser = _dbContext.Users.Include("Friends").First(u => u.Id == id);
+
+            return user.Id == id || user.Friends.Contains(otherUser);
         }
     }
 }

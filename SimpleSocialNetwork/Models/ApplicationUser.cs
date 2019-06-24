@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
@@ -21,5 +22,7 @@ namespace SimpleSocialNetwork.Models
         public DateTime? BirthDate { get; set; }
 
         public string Hobbies { get; set; }
+
+        public ICollection<ApplicationUser> Friends { get; set; }
     }
 }
