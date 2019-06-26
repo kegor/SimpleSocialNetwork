@@ -14,5 +14,31 @@ namespace SimpleSocialNetwork.Data
             : base(options)
         {
         }
+
+        public DbSet<GalleryImage> GalleryImages { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<ApplicationUser>(
+                typeBuilder =>
+                {
+                    typeBuilder.HasMany(u => u.GalleryImages);
+
+                });
+
+            builder.Entity<GalleryImage>(
+                typeBuilder =>
+                {
+                    typeBuilder.HasMany(i => i.FriendsWithAccess);
+                });
+
+            builder.Entity<GalleryImage>(
+                typeBuilder =>
+                {
+                    typeBuilder.HasOne(i => i.Owner);
+                });
+        }
     }
 }

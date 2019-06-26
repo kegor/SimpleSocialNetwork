@@ -1,0 +1,29 @@
+﻿@model ICollection<GalleryImage>
+
+@{
+    ViewData["Title"] = "Image gallery";
+}
+
+<h2>Image gallery</h2>
+
+<div class="mb-3">
+    <form class="form-inline" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="mb-2 mr-sm-2 mb-sm-0">Upload new model</label>
+            <input type="file" class="mb-2 mr-sm-2 mb-sm-0" name="Image" id="fileUpload" accept=".png,.jpg,.jpeg,.gif,.tif" />
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <div style="display: inline-block; width: 100px; height: 100px; margin-right: 1em;">
+            <a asp-controller="ImageGallery" asp-action="Image" asp-route-id="@item.Id">
+                <img src="@Url.Action("ImageFile", "ImageGallery", new {Id = item.Id})" height="100" width="100"/>
+            </a>
+        </div>
+    }
+}

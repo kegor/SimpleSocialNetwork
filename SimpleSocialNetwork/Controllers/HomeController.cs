@@ -93,7 +93,7 @@ namespace SimpleSocialNetwork.Controllers
 
         public IActionResult UserProfile(string id)
         {
-            var user = _dbContext.Users.First(u => u.Id == id);
+            var user = _dbContext.Users.Include(u => u.Friends).First(u => u.Id == id);
             ViewBag.isAuthorizedUser = IsAuthorizedUser(user.Id);
             ViewBag.isFriend = IsFriend(user.Id);
             return View(user);
@@ -130,14 +130,7 @@ namespace SimpleSocialNetwork.Controllers
         protected bool IsAuthorizedUser(string id)
         {
             var user = _dbContext.Users.First(u => u.Email == HttpContext.User.Identity.Name);
-            if (user.Id == id)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return user.Id == id;
         }
 
         // TODO: reconsider this method

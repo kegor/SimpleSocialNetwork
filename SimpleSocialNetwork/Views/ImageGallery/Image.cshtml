@@ -1,0 +1,39 @@
+﻿@model SimpleSocialNetwork.Models.GalleryImage
+
+@{
+    ViewData["Title"] = "Image";
+}
+
+<h2>Image details</h2>
+
+<div class="mb-3">
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <div style="float: left" class="mr-3">
+                <img src="@Url.Action("ImageFile", "ImageGallery", new {Id = Model.Id})" height="480" width="640" />
+            </div>
+            @Html.HiddenFor(model => model.Id)
+            @if (ViewBag.IsOwner)
+            {
+                <label class="mb-2">Share with friend:</label>
+                <select style="width: auto" multiple="multiple" class="form-control mb-2" asp-items="ViewBag.FriendsListToShare" name="Friend"></select>
+
+                if (Model.FriendsWithAccess != null)
+                {
+                    <label class="mb-2">Shared with:</label><br />
+                    foreach (var friend in Model.FriendsWithAccess)
+                    {
+                        <a class="mr-2" asp-controller="Home" asp-action="UserProfile" asp-route-id="@friend.Id">@friend.FirstName</a>
+                        <a style="color: red; font-weight: bolder" asp-controller="ImageGallery" asp-action="RemoveSharing" asp-route-id="@Model.Id" asp-route-friendid="@friend.Id">X</a>
+                    <br />
+                    }
+                }
+
+                <div class="mt-2">
+                    <input type="submit" value="Share" class="btn btn-primary" />
+                    <a asp-controller="ImageGallery" class="btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete image</a>
+                </div>
+            }
+        </div>
+    </form>
+</div>

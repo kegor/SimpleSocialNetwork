@@ -43,7 +43,7 @@ namespace SimpleSocialNetwork.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            var users = from s in _dbContext.Users select s;
+            var users = from s in _dbContext.Users.Where(u => u.UserName != HttpContext.User.Identity.Name) select s;
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -98,6 +98,28 @@ namespace SimpleSocialNetwork.Controllers
                 _dbContext.SaveChanges();
             }
             return RedirectToAction("UserProfile", "Home", new { newFriend.Id });
+        }
+
+        public IActionResult RemoveFriend(string id)
+        {
+            var identityUser = _userManager.Users.Include("Friends").FirstOrDefault(u => u.UserName == HttpContext.User.Identity.Name);
+            var oldFriend = _userManager.Users.Include("Friends").First(u => u.Id == id);
+
+            if (identityUser == null)
+            {
+                return NotFound("Current user was not found.");
+            }
+
+            if (identityUser.Friends.Contains(oldFriend))
+            {
+                identityUser.Friends.Remove(oldFriend);
+                oldFriend.Friends.Remove(identityUser);
+                _dbContext.Users.Update(identityUser);
+                _dbContext.Users.Update(oldFriend);
+                _dbContext.SaveChanges();
+            }
+
+            return RedirectToAction("UserProfile", "Home", new { identityUser.Id });
         }
     }
 }

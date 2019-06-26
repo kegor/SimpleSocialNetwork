@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace SimpleSocialNetwork.Models
 {
@@ -24,5 +25,8 @@ namespace SimpleSocialNetwork.Models
         public string Hobbies { get; set; }
 
         public ICollection<ApplicationUser> Friends { get; set; }
+
+        [Display(Name = "Image gallery")]
+        public ICollection<GalleryImage> GalleryImages { get; set; }
     }
 }
