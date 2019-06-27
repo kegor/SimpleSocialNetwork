@@ -9,7 +9,7 @@
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
     </li>
     <li class="nav-item">
-        <img style="vertical-align: -webkit-baseline-middle;" src="@Url.Action("Photo", "Home")" height="24" width="24"/>
+        <img style="vertical-align: -webkit-baseline-middle;" src="@Url.Action("Photo", "Users")" height="24" width="24"/>
     </li>
     <li class="nav-item">
         <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

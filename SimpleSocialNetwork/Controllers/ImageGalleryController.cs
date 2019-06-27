@@ -94,7 +94,6 @@ namespace SimpleSocialNetwork.Controllers
             return null;
         }
 
-        //[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public IActionResult Image(int id)
         {
             var galleryImage = _dbContext.GalleryImages.Include(i => i.Owner).ThenInclude(u => u.Friends).First(i => i.Id == id);
@@ -121,21 +120,25 @@ namespace SimpleSocialNetwork.Controllers
         [HttpPost]
         public IActionResult Image(GalleryImage model)
         {
-            // TODO: support multi-select
-            var userId = Request.Form["Friend"];
-            var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
-            var galleryImage = _dbContext.GalleryImages.First(u => u.Id == model.Id);
+            string[] userIds = Request.Form["Friend"];
 
-            if (galleryImage.FriendsWithAccess == null)
+            if (userIds.Any())
             {
-                galleryImage.FriendsWithAccess = new List<ApplicationUser>();
+                var users = _dbContext.Users.Where(u => userIds.Contains(u.Id)).ToList();
+
+                if (users.Any())
+                {
+                    var galleryImage = _dbContext.GalleryImages.Include(i => i.FriendsWithAccess).First(u => u.Id == model.Id);
+
+                    users.ForEach(u => galleryImage.FriendsWithAccess.Add(u));
+                    _dbContext.GalleryImages.Update(galleryImage);
+                    _dbContext.SaveChanges();
+
+                    return RedirectToAction("Image", new { id = galleryImage.Id });
+                }
             }
 
-            galleryImage.FriendsWithAccess.Add(user);
-            _dbContext.GalleryImages.Update(galleryImage);
-            _dbContext.SaveChanges();
-
-            return RedirectToAction("Image", new {id = galleryImage.Id});
+            return View("Image", new {id = model.Id});
         }
 
         public IActionResult Delete(int id)

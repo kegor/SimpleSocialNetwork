@@ -23,7 +23,7 @@
                     <label class="mb-2">Shared with:</label><br />
                     foreach (var friend in Model.FriendsWithAccess)
                     {
-                        <a class="mr-2" asp-controller="Home" asp-action="UserProfile" asp-route-id="@friend.Id">@friend.FirstName</a>
+                        <a class="mr-2" asp-controller="Users" asp-action="UserProfile" asp-route-id="@friend.Id">@friend.FirstName</a>
                         <a style="color: red; font-weight: bolder" asp-controller="ImageGallery" asp-action="RemoveSharing" asp-route-id="@Model.Id" asp-route-friendid="@friend.Id">X</a>
                     <br />
                     }

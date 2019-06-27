@@ -10,7 +10,7 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Avatar)</dt>
-        <dd class="col-sm-10"><img src="@Url.Action("Photo", "Home", new { Id = Model.Id })" height="100" width="100" /></dd>
+        <dd class="col-sm-10"><img src="@Url.Action("Photo", "Users", new { Model.Id })" height="100" width="100" /></dd>
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.FirstName)</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.FirstName)</dd>
         <dt class="col-sm-2">@Html.DisplayNameFor(model => model.LastName)</dt>
@@ -27,7 +27,7 @@
             {
                 foreach (var friend in Model.Friends)
                 {
-                    <a class="mr-2" asp-controller="Home" asp-action="UserProfile" asp-route-id="@friend.Id">@friend.FirstName</a>
+                    <a class="mr-2" asp-controller="Users" asp-action="UserProfile" asp-route-id="@friend.Id">@friend.FirstName</a>
                     if (ViewBag.isAuthorizedUser)
                     {
                         <a style="color: red; font-weight: bolder" asp-controller="Users" asp-action="RemoveFriend" asp-route-id="@friend.Id">X</a>
@@ -47,7 +47,7 @@
 @if (ViewBag.isAuthorizedUser)
 {
     <div>
-        <a class="btn btn-primary" asp-controller="Home" asp-action="EditProfile" asp-route-id="@Model.Id">Edit profile</a>
+        <a class="btn btn-primary" asp-controller="Users" asp-action="EditProfile" asp-route-id="@Model.Id">Edit profile</a>
     </div>
 }
 else
